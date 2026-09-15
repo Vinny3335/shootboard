@@ -1,0 +1,962 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shoot Board &middot; Next Generation</title>
+<meta name="description" content="Weekly shoot board for Antony Morato, Replay, Hydraulics and Hydraulics Femme.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#F4F3F0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121115" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2317161A'/%3E%3Ccircle cx='16' cy='16' r='6.5' fill='none' stroke='%23F4F3F0' stroke-width='2.4'/%3E%3Ccircle cx='16' cy='16' r='1.8' fill='%23C2352D'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root{
+    color-scheme:light;
+    padding-top:env(safe-area-inset-top, 0px);
+    padding-bottom:env(safe-area-inset-bottom, 0px);
+    --ground:#F4F3F0;
+    --surface:#FFFFFF;
+    --surface-2:#FAF9F7;
+    --line:#E3E1DC;
+    --line-strong:#CDCAC3;
+    --ink:#17161A;
+    --ink-2:#4B4853;
+    --ink-3:#817D89;
+    --accent:#17161A;
+    --accent-ink:#FFFFFF;
+    --urgent:#C2352D;
+    --urgent-soft:#FAEAE8;
+    --soon:#A87209;
+    --soon-soft:#FAF1DC;
+    --sched:#2C7A50;
+    --sched-soft:#E7F2EB;
+    --shadow:0 1px 2px rgba(23,22,26,.05), 0 10px 26px -14px rgba(23,22,26,.20);
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme:dark;
+      --ground:#121115;
+      --surface:#1A191E;
+      --surface-2:#211F26;
+      --line:#2D2B33;
+      --line-strong:#403D48;
+      --ink:#F2F0F4;
+      --ink-2:#B9B5C1;
+      --ink-3:#847F8D;
+      --accent:#F2F0F4;
+      --accent-ink:#121115;
+      --urgent:#FF6E60;
+      --urgent-soft:#39201D;
+      --soon:#E9B24E;
+      --soon-soft:#332711;
+      --sched:#5FC689;
+      --sched-soft:#16301F;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme:dark;
+    --ground:#121115;
+    --surface:#1A191E;
+    --surface-2:#211F26;
+    --line:#2D2B33;
+    --line-strong:#403D48;
+    --ink:#F2F0F4;
+    --ink-2:#B9B5C1;
+    --ink-3:#847F8D;
+    --accent:#F2F0F4;
+    --accent-ink:#121115;
+    --urgent:#FF6E60;
+    --urgent-soft:#39201D;
+    --soon:#E9B24E;
+    --soon-soft:#332711;
+    --sched:#5FC689;
+    --sched-soft:#16301F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  img{max-width:100%}
+  html,body{margin:0}
+  body{
+    background:var(--ground);
+    color:var(--ink);
+    font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    font-size:14px;
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{
+    font-family:Archivo,"Helvetica Neue",Arial,sans-serif;
+    font-stretch:112%;
+    margin:0;
+    text-wrap:balance;
+    letter-spacing:-.012em;
+  }
+  button{font:inherit;color:inherit;cursor:pointer}
+  :focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:6px}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+  .eyebrow{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:10px;text-transform:uppercase;letter-spacing:.11em;color:var(--ink-3);
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky;top:env(safe-area-inset-top, 0px);z-index:30;
+    background:var(--ground);border-bottom:1px solid var(--line);
+  }
+  .bar-in,.wrap{max-width:1420px;margin-inline:auto;padding-inline:16px}
+  .bar-in{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-block:12px}
+  .brandmark{display:flex;align-items:baseline;gap:9px;margin-right:auto;min-width:0}
+  .brandmark h1{font-size:19px;font-weight:700}
+  .brandmark .eyebrow{white-space:nowrap}
+
+  .weeknav{display:flex;align-items:center;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px}
+  .weeknav button{
+    background:none;border:0;padding:5px 8px;border-radius:7px;color:var(--ink-2);
+    display:grid;place-items:center;line-height:1;
+  }
+  .weeknav button:hover{background:var(--surface-2);color:var(--ink)}
+  .weeklabel{padding:2px 10px;text-align:center;min-width:132px}
+  .weeklabel b{display:block;font-size:13px;font-weight:600}
+  .weeklabel span{display:block;font-size:10.5px;color:var(--ink-3);letter-spacing:.06em}
+  .btn{
+    border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);
+    padding:8px 13px;border-radius:10px;font-weight:500;font-size:13px;
+    display:inline-flex;align-items:center;gap:7px;white-space:nowrap;
+  }
+  .btn:hover{background:var(--surface-2)}
+  .btn-primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+  .btn-primary:hover{opacity:.88;background:var(--accent)}
+  .btn-ghost{border-color:transparent;background:transparent;color:var(--ink-2)}
+  .btn-ghost:hover{background:var(--surface);color:var(--ink)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn-danger{border-color:transparent;background:transparent;color:var(--urgent)}
+  .btn-danger:hover{background:var(--urgent-soft)}
+  .plus{font-size:16px;line-height:1;margin-top:-1px}
+
+  .live{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-3)}
+  .live .bulb{width:6px;height:6px;border-radius:50%;background:var(--ink-3)}
+  .live.on .bulb{background:var(--sched)}
+  .live.off .bulb{background:var(--soon)}
+
+  /* ---------- notices ---------- */
+  .wrap{padding-block:16px 44px}
+  .notice{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    border:1px dashed var(--line-strong);border-radius:11px;
+    padding:9px 13px;color:var(--ink-2);font-size:12.5px;margin-bottom:14px;
+    background:var(--surface-2);
+  }
+  .notice strong{color:var(--ink);font-weight:600}
+  .notice.bad{border-style:solid;border-color:var(--urgent);background:var(--urgent-soft);color:var(--urgent)}
+  .notice.bad strong{color:var(--urgent)}
+  .notice .btn{padding:5px 10px;font-size:12px;margin-left:auto}
+
+  /* ---------- summary ---------- */
+  .summary{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));
+    gap:10px;margin-bottom:18px;
+  }
+  .tile{
+    background:var(--surface);border:1px solid var(--line);border-radius:12px;
+    padding:11px 13px 12px;text-align:left;display:block;position:relative;
+    transition:border-color .12s ease;
+  }
+  .tile:hover{border-color:var(--line-strong)}
+  .tile[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+  .tile .n{font-family:Archivo,sans-serif;font-stretch:112%;font-size:27px;font-weight:600;line-height:1.05;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .tile .k{display:block;margin-top:3px;font-size:11.5px;color:var(--ink-2)}
+  .tile.crit{background:var(--urgent-soft);border-color:transparent}
+  .tile.crit .n{color:var(--urgent)}
+  .tile.crit .k{color:var(--urgent);opacity:.85}
+  .tile.crit[aria-pressed="true"]{box-shadow:inset 0 0 0 1.5px var(--urgent)}
+  .tile.zero .n{color:var(--ink-3)}
+
+  /* ---------- board ---------- */
+  .board{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:13px;align-items:start}
+  .col{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    display:flex;flex-direction:column;overflow:hidden;
+  }
+  .col-head{display:flex;align-items:center;gap:10px;padding:13px 14px 12px;border-bottom:1px solid var(--line)}
+  .mono-tile{
+    width:30px;height:30px;flex:0 0 auto;border-radius:8px;
+    background:var(--accent);color:var(--accent-ink);
+    display:grid;place-items:center;
+    font-family:Archivo,sans-serif;font-stretch:112%;font-weight:700;font-size:11.5px;letter-spacing:.02em;
+  }
+  .col-head h2{font-size:14.5px;font-weight:600;line-height:1.15}
+  .col-head .count{margin-left:auto;font-size:11px;color:var(--ink-3);text-align:right}
+  .col-head .count b{color:var(--urgent);font-weight:600}
+
+  .cat{border-bottom:1px solid var(--line);padding:10px 14px 12px}
+  .col .cat:last-child{border-bottom:0}
+  .cat-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .cat-head .eyebrow{flex:1 1 auto}
+  .addrow{
+    width:100%;border:1px dashed var(--line-strong);background:transparent;color:var(--ink-3);
+    border-radius:9px;padding:7px;font-size:12px;text-align:center;
+  }
+  .addrow:hover{color:var(--ink);border-color:var(--ink-3);background:var(--surface-2)}
+  .items{display:flex;flex-direction:column;gap:7px}
+  .items:not(:empty){margin-bottom:7px}
+
+  .item{
+    position:relative;display:flex;gap:0;width:100%;text-align:left;
+    background:var(--surface-2);border:1px solid var(--line);border-radius:10px;
+    overflow:hidden;padding:0;
+  }
+  .item:hover{border-color:var(--line-strong)}
+  .sev{width:3px;flex:0 0 3px;align-self:stretch}
+  .sev-red{background:var(--urgent)}
+  .sev-amber{background:var(--soon)}
+  .sev-green{background:var(--sched)}
+  .item-body{padding:9px 11px 10px;flex:1 1 auto;min-width:0}
+  .item-top{display:flex;align-items:flex-start;gap:8px}
+  .item-label{font-size:13.5px;font-weight:600;line-height:1.3;word-break:break-word;flex:1 1 auto}
+  .prio-dot{width:8px;height:8px;border-radius:50%;flex:0 0 8px;margin-top:5px}
+  .prio-dot.red{background:var(--urgent)}
+  .prio-dot.amber{background:var(--soon)}
+  .prio-dot.green{background:var(--sched)}
+  .item-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:7px}
+  .item-note{
+    margin:7px 0 0;font-size:11.5px;color:var(--ink-3);line-height:1.4;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .due{font-size:11px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+  .due.late{color:var(--urgent);font-weight:500}
+
+  .status{
+    display:inline-flex;align-items:center;gap:6px;
+    border:1px solid var(--line-strong);border-radius:999px;
+    padding:2px 8px 2px 6px;font-size:10.5px;letter-spacing:.02em;color:var(--ink-2);
+    background:var(--surface);
+  }
+  .meter{display:inline-flex;gap:2px}
+  .meter i{width:3.5px;height:3.5px;border-radius:50%;background:var(--line-strong);display:block}
+  .meter i.on{background:var(--ink-2)}
+  .status.done{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+  .status.done .meter i{background:var(--accent-ink);opacity:.35}
+  .status.done .meter i.on{opacity:1}
+
+  /* ---------- footer ---------- */
+  .foot{border-top:1px solid var(--line);margin-top:8px}
+  .foot .bar-in{padding-block:14px;font-size:12px;color:var(--ink-3);gap:12px}
+  .foot .btn{padding:6px 11px;font-size:12px}
+
+  /* ---------- modal ---------- */
+  .overlay{
+    position:fixed;inset:0;z-index:60;background:rgba(12,11,14,.5);
+    display:flex;align-items:center;justify-content:center;padding:16px;
+    backdrop-filter:blur(2px);
+  }
+  .sheet{
+    background:var(--surface);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);width:100%;max-width:520px;max-height:88vh;overflow-y:auto;
+  }
+  .sheet-head{
+    display:flex;align-items:center;gap:10px;padding:15px 18px 13px;border-bottom:1px solid var(--line);
+    position:sticky;top:0;background:var(--surface);z-index:2;
+  }
+  .sheet-head h3{font-size:16px;font-weight:700;flex:1 1 auto}
+  .sheet-body{padding:16px 18px 6px;display:flex;flex-direction:column;gap:15px}
+  .sheet-foot{
+    display:flex;align-items:center;gap:9px;padding:14px 18px;
+    border-top:1px solid var(--line);position:sticky;bottom:0;background:var(--surface);flex-wrap:wrap;
+  }
+  .sheet-foot .spacer{flex:1 1 auto}
+  .field{display:flex;flex-direction:column;gap:7px}
+  .field > label{font-family:"IBM Plex Mono",monospace;font-size:10px;text-transform:uppercase;letter-spacing:.11em;color:var(--ink-3)}
+  .field .hint{font-size:11.5px;color:var(--ink-3)}
+  input[type="text"],input[type="date"],textarea{
+    font:inherit;color:var(--ink);background:var(--surface-2);
+    border:1px solid var(--line-strong);border-radius:9px;padding:9px 11px;width:100%;
+  }
+  input[type="date"]{font-family:"IBM Plex Mono",monospace}
+  textarea{resize:vertical;min-height:62px;line-height:1.45}
+  input::placeholder,textarea::placeholder{color:var(--ink-3)}
+
+  .seg{display:flex;flex-wrap:wrap;gap:6px}
+  .seg-b{
+    border:1px solid var(--line-strong);background:var(--surface-2);border-radius:9px;
+    padding:7px 11px;font-size:12.5px;color:var(--ink-2);display:inline-flex;align-items:center;gap:7px;
+  }
+  .seg-b:hover{color:var(--ink)}
+  .seg-b.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+  .seg-b .sw{width:8px;height:8px;border-radius:50%}
+  .seg-b[data-v="red"] .sw{background:var(--urgent)}
+  .seg-b[data-v="amber"] .sw{background:var(--soon)}
+  .seg-b[data-v="green"] .sw{background:var(--sched)}
+  .seg-b.on[data-v="red"]{background:var(--urgent);border-color:var(--urgent);color:#fff}
+  .seg-b.on[data-v="amber"]{background:var(--soon);border-color:var(--soon);color:#fff}
+  .seg-b.on[data-v="green"]{background:var(--sched);border-color:var(--sched);color:#fff}
+  .seg-b.on .sw{background:currentColor}
+  .weekchip{
+    display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);
+    background:var(--surface-2);border-radius:999px;padding:4px 11px;font-size:11.5px;color:var(--ink-2);
+  }
+  .err{color:var(--urgent);font-size:12px}
+
+  @media (max-width:560px){
+    .bar-in{gap:9px}
+    .brandmark{margin-right:0;width:100%}
+    .weeknav{flex:1 1 auto}
+    .weeklabel{flex:1 1 auto}
+    .summary{grid-template-columns:repeat(3,1fr);gap:8px}
+    .tile{padding:9px 10px 10px}
+    .tile .n{font-size:22px}
+    .tile .k{font-size:10.5px}
+    .sheet{max-height:92vh}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="bar-in">
+    <div class="brandmark">
+      <h1>Shoot Board</h1>
+      <span class="eyebrow">Next Generation &middot; 4 stores</span>
+    </div>
+    <span class="live" id="live" title="Connection to the shared board"><span class="bulb"></span><span id="live-text">Connecting</span></span>
+    <div class="weeknav">
+      <button type="button" id="wk-prev" aria-label="Previous week">&#9664;</button>
+      <div class="weeklabel" aria-live="polite">
+        <b id="wk-num">Week --</b>
+        <span class="mono" id="wk-range">&nbsp;</span>
+      </div>
+      <button type="button" id="wk-next" aria-label="Next week">&#9654;</button>
+    </div>
+    <button type="button" class="btn btn-ghost" id="wk-today" hidden>This week</button>
+    <button type="button" class="btn btn-primary" id="add-top"><span class="plus">+</span>Add request</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="notice bad" id="err-notice" hidden>
+    <span id="err-notice-text"></span>
+    <button type="button" class="btn" id="err-retry">Retry</button>
+  </div>
+
+  <div class="notice" id="ex-notice" hidden>
+    <span><strong>Example rows.</strong> These are here to show the layout &mdash; edit them as real jobs come in, or clear them out.</span>
+    <button type="button" class="btn" id="ex-clear">Clear examples</button>
+  </div>
+
+  <section class="summary" aria-label="Week at a glance">
+    <button type="button" class="tile crit" id="t-urgent" aria-pressed="false">
+      <span class="n">0</span><span class="k">Needs attention</span>
+    </button>
+    <button type="button" class="tile" id="t-not_started" aria-pressed="false">
+      <span class="n">0</span><span class="k">Not started</span>
+    </button>
+    <button type="button" class="tile" id="t-in_progress" aria-pressed="false">
+      <span class="n">0</span><span class="k">In progress</span>
+    </button>
+    <button type="button" class="tile" id="t-editing" aria-pressed="false">
+      <span class="n">0</span><span class="k">Editing</span>
+    </button>
+    <button type="button" class="tile" id="t-complete" aria-pressed="false">
+      <span class="n">0</span><span class="k">Complete</span>
+    </button>
+  </section>
+
+  <section class="board" id="board" aria-label="Shoot requests by store"></section>
+</main>
+
+<footer class="foot">
+  <div class="bar-in">
+    <span id="foot-count">&nbsp;</span>
+    <span style="flex:1 1 auto"></span>
+    <button type="button" class="btn" id="carry">Carry unfinished into next week</button>
+  </div>
+</footer>
+
+<div class="overlay" id="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+  <div class="sheet" id="sheet">
+    <div class="sheet-head">
+      <h3 id="sheet-title">Add request</h3>
+      <span class="weekchip" id="sheet-week"></span>
+      <button type="button" class="btn btn-ghost" id="sheet-x" aria-label="Close">&#10005;</button>
+    </div>
+    <div class="sheet-body">
+      <div class="field">
+        <label id="lbl-store">Store</label>
+        <div class="seg" id="f-store" role="group" aria-labelledby="lbl-store"></div>
+      </div>
+      <div class="field">
+        <label id="lbl-cat">Category</label>
+        <div class="seg" id="f-cat" role="group" aria-labelledby="lbl-cat"></div>
+      </div>
+      <div class="field">
+        <label for="f-label">Which brand exactly</label>
+        <input type="text" id="f-label" placeholder="e.g. Karl Lagerfeld, Represent, Steve Madden" autocomplete="off">
+        <span class="hint">Free text &mdash; write it however the store refers to it.</span>
+      </div>
+      <div class="field">
+        <label id="lbl-prio">Priority</label>
+        <div class="seg" id="f-prio" role="group" aria-labelledby="lbl-prio"></div>
+      </div>
+      <div class="field">
+        <label id="lbl-status">Status</label>
+        <div class="seg" id="f-status" role="group" aria-labelledby="lbl-status"></div>
+      </div>
+      <div class="field">
+        <label for="f-due">Shoot date</label>
+        <input type="date" id="f-due">
+      </div>
+      <div class="field">
+        <label for="f-notes">Notes</label>
+        <textarea id="f-notes" placeholder="Location, models booked, styling, deliverables&hellip;"></textarea>
+      </div>
+      <p class="err" id="f-err" hidden></p>
+    </div>
+    <div class="sheet-foot">
+      <button type="button" class="btn btn-danger" id="f-delete" hidden>Delete</button>
+      <button type="button" class="btn btn-ghost" id="f-move" hidden>Move to next week</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn" id="f-cancel">Cancel</button>
+      <button type="button" class="btn btn-primary" id="f-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+/* ======================================================================
+   Shoot Board  —  connection settings
+   ====================================================================== */
+var SUPABASE_URL      = "https://vgxeaonhqrppwsmkztbu.supabase.co";
+var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZneGVhb25ocXJwcHdzbWt6dGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0NjYyMjIsImV4cCI6MjEwNTA0MjIyMn0.jrK37ja2jBWQmKjzKgTaKIfrEG2GGW12bwYJisY7Qt4";
+var TABLE             = "shoot_items";
+/* ====================================================================== */
+
+(function(){
+  "use strict";
+
+  var STORES = [
+    {id:"antony-morato", name:"Antony Morato", mono:"AM"},
+    {id:"replay",        name:"Replay",        mono:"RP"},
+    {id:"hydraulics",    name:"Hydraulics",    mono:"HY"},
+    {id:"hydraulics-femme", name:"Hydraulics Femme", mono:"HF"}
+  ];
+  var CATS = [
+    {id:"shoes", name:"Shoes"},
+    {id:"clothing", name:"Clothing"},
+    {id:"accessories", name:"Accessories"}
+  ];
+  var PRIOS = [
+    {id:"red",   name:"Urgent"},
+    {id:"amber", name:"Soon"},
+    {id:"green", name:"Scheduled"}
+  ];
+  var STATUSES = [
+    {id:"not_started", name:"Not started"},
+    {id:"in_progress", name:"In progress"},
+    {id:"editing",     name:"Editing"},
+    {id:"complete",    name:"Complete"}
+  ];
+  var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+
+  /* ---------- week helpers (ISO weeks) ---------- */
+  function utcToday(){
+    var n = new Date();
+    return new Date(Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()));
+  }
+  function weekKey(d){
+    var t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+    var dow = t.getUTCDay() || 7;
+    t.setUTCDate(t.getUTCDate() + 4 - dow);
+    var y = t.getUTCFullYear();
+    var jan1 = Date.UTC(y, 0, 1);
+    var wk = Math.floor((t.getTime() - jan1) / 86400000 / 7) + 1;
+    return y + "-W" + (wk < 10 ? "0" + wk : String(wk));
+  }
+  function mondayOf(key){
+    var parts = key.split("-W");
+    var y = parseInt(parts[0], 10), w = parseInt(parts[1], 10);
+    var jan4 = new Date(Date.UTC(y, 0, 4));
+    var dow = jan4.getUTCDay() || 7;
+    var m = new Date(jan4.getTime());
+    m.setUTCDate(jan4.getUTCDate() - (dow - 1) + (w - 1) * 7);
+    return m;
+  }
+  function shiftWeek(key, n){
+    var m = mondayOf(key);
+    m.setUTCDate(m.getUTCDate() + 7 * n);
+    return weekKey(m);
+  }
+  function weekRange(key){
+    var a = mondayOf(key), b = new Date(a.getTime());
+    b.setUTCDate(a.getUTCDate() + 6);
+    var am = MONTHS[a.getUTCMonth()], bm = MONTHS[b.getUTCMonth()];
+    if (am === bm) return a.getUTCDate() + "–" + b.getUTCDate() + " " + bm;
+    return a.getUTCDate() + " " + am + " – " + b.getUTCDate() + " " + bm;
+  }
+  function weekNum(key){ return parseInt(key.split("-W")[1], 10); }
+  function fmtDue(iso){
+    if (!iso) return "";
+    var p = String(iso).split("-");
+    if (p.length !== 3) return "";
+    var d = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2]));
+    if (isNaN(d.getTime())) return "";
+    return DAYS[(d.getUTCDay() + 6) % 7] + " " + d.getUTCDate() + " " + MONTHS[d.getUTCMonth()];
+  }
+  function todayIso(){
+    var t = utcToday();
+    var m = t.getUTCMonth() + 1, d = t.getUTCDate();
+    return t.getUTCFullYear() + "-" + (m < 10 ? "0" + m : m) + "-" + (d < 10 ? "0" + d : d);
+  }
+  function esc(s){
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+  function byId(list, id){
+    for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i];
+    return null;
+  }
+  function statusIndex(id){
+    for (var i = 0; i < STATUSES.length; i++) if (STATUSES[i].id === id) return i;
+    return 0;
+  }
+
+  /* ---------- state ---------- */
+  var sb = null;
+  var ready = false;
+  var items = [];
+  var week = weekKey(utcToday());
+  var thisWeek = week;
+  var filter = null;
+  var draft = null;
+  var editingId = null;
+  var carryArmed = false;
+  var lastFocus = null;
+
+  var $ = function(id){ return document.getElementById(id); };
+  var board = $("board"), overlay = $("overlay");
+
+  /* ---------- rendering ---------- */
+  function weekItems(){
+    var out = [];
+    for (var i = 0; i < items.length; i++) if (items[i].week === week) out.push(items[i]);
+    out.sort(function(a, b){
+      var pa = ["red","amber","green"].indexOf(a.prio), pb = ["red","amber","green"].indexOf(b.prio);
+      if (pa !== pb) return pa - pb;
+      return String(a.created_at).localeCompare(String(b.created_at));
+    });
+    return out;
+  }
+  function passesFilter(it){
+    if (!filter) return true;
+    if (filter === "urgent") return it.prio === "red" && it.status !== "complete";
+    return it.status === filter;
+  }
+  function renderHeader(){
+    $("wk-num").textContent = "Week " + weekNum(week);
+    $("wk-range").textContent = weekRange(week);
+    $("wk-today").hidden = (week === thisWeek);
+  }
+  function renderSummary(list){
+    var counts = {urgent:0, not_started:0, in_progress:0, editing:0, complete:0};
+    for (var i = 0; i < list.length; i++){
+      var it = list[i];
+      if (it.prio === "red" && it.status !== "complete") counts.urgent++;
+      if (counts[it.status] !== undefined) counts[it.status]++;
+    }
+    var keys = ["urgent","not_started","in_progress","editing","complete"];
+    for (var k = 0; k < keys.length; k++){
+      var el = $("t-" + keys[k]);
+      el.querySelector(".n").textContent = counts[keys[k]];
+      el.setAttribute("aria-pressed", filter === keys[k] ? "true" : "false");
+      el.classList.toggle("zero", counts[keys[k]] === 0);
+    }
+    var total = list.length, open = total - counts.complete;
+    $("foot-count").textContent = total === 0
+      ? (ready ? "Nothing on the board for this week yet." : "Loading the board…")
+      : total + (total === 1 ? " request" : " requests") + " this week · " + open + " still open · " + counts.complete + " complete";
+  }
+  function itemHtml(it){
+    var si = statusIndex(it.status);
+    var st = STATUSES[si];
+    var meter = "";
+    for (var i = 0; i < 4; i++) meter += '<i class="' + (i <= si ? "on" : "") + '"></i>';
+    var late = it.due && it.due < todayIso() && it.status !== "complete";
+    var due = it.due
+      ? '<span class="due' + (late ? " late" : "") + '">' + esc(fmtDue(it.due)) + (late ? " · past" : "") + '</span>'
+      : "";
+    var note = it.notes ? '<span class="item-note">' + esc(it.notes) + '</span>' : "";
+    return '<button type="button" class="item" data-id="' + esc(it.id) + '">' +
+      '<span class="sev sev-' + esc(it.prio) + '"></span>' +
+      '<span class="item-body">' +
+        '<span class="item-top">' +
+          '<span class="item-label">' + esc(it.label || "Untitled") + '</span>' +
+          '<span class="prio-dot ' + esc(it.prio) + '" title="' + esc((byId(PRIOS, it.prio) || {}).name || "") + '"></span>' +
+        '</span>' +
+        '<span class="item-meta">' +
+          '<span class="status' + (it.status === "complete" ? " done" : "") + '"><span class="meter">' + meter + '</span>' + esc(st.name) + '</span>' +
+          due +
+        '</span>' + note +
+      '</span>' +
+    '</button>';
+  }
+  function render(){
+    renderHeader();
+    var list = weekItems();
+    renderSummary(list);
+    var html = "";
+    for (var s = 0; s < STORES.length; s++){
+      var store = STORES[s], mine = [];
+      for (var i = 0; i < list.length; i++) if (list[i].store === store.id) mine.push(list[i]);
+      var urgent = 0;
+      for (var u = 0; u < mine.length; u++) if (mine[u].prio === "red" && mine[u].status !== "complete") urgent++;
+      var cats = "";
+      for (var c = 0; c < CATS.length; c++){
+        var cat = CATS[c], rows = "", inCat = 0;
+        for (var j = 0; j < mine.length; j++){
+          if (mine[j].cat !== cat.id) continue;
+          inCat++;
+          if (!passesFilter(mine[j])) continue;
+          rows += itemHtml(mine[j]);
+        }
+        cats += '<div class="cat">' +
+          '<div class="cat-head"><span class="eyebrow">' + cat.name + '</span>' +
+          (inCat ? '<span class="eyebrow mono">' + inCat + '</span>' : '') + '</div>' +
+          '<div class="items">' + rows + '</div>' +
+          '<button type="button" class="addrow" data-store="' + store.id + '" data-cat="' + cat.id + '">+ Add ' + cat.name.toLowerCase() + '</button>' +
+        '</div>';
+      }
+      html += '<section class="col">' +
+        '<div class="col-head">' +
+          '<span class="mono-tile" aria-hidden="true">' + store.mono + '</span>' +
+          '<h2>' + store.name + '</h2>' +
+          '<span class="count">' + (urgent ? '<b>' + urgent + ' urgent</b> · ' : '') + mine.length + '</span>' +
+        '</div>' + cats +
+      '</section>';
+    }
+    board.innerHTML = html;
+
+    var hasEx = false;
+    for (var e = 0; e < items.length; e++) if (items[e].example) { hasEx = true; break; }
+    $("ex-notice").hidden = !(hasEx && sb);
+  }
+
+  /* ---------- editor ---------- */
+  function segFill(host, list, key, withSwatch){
+    var html = "";
+    for (var i = 0; i < list.length; i++){
+      html += '<button type="button" class="seg-b" data-k="' + key + '" data-v="' + list[i].id + '">' +
+        (withSwatch ? '<span class="sw"></span>' : '') + esc(list[i].name) + '</button>';
+    }
+    host.innerHTML = html;
+  }
+  function segSync(host, val){
+    var bs = host.querySelectorAll(".seg-b");
+    for (var i = 0; i < bs.length; i++){
+      var on = bs[i].getAttribute("data-v") === val;
+      bs[i].classList.toggle("on", on);
+      bs[i].setAttribute("aria-pressed", on ? "true" : "false");
+    }
+  }
+  function syncDraft(){
+    segSync($("f-store"), draft.store);
+    segSync($("f-cat"), draft.cat);
+    segSync($("f-prio"), draft.prio);
+    segSync($("f-status"), draft.status);
+  }
+  function openEditor(existing, preset){
+    lastFocus = document.activeElement;
+    editingId = existing ? existing.id : null;
+    draft = existing
+      ? {store:existing.store, cat:existing.cat, label:existing.label || "", prio:existing.prio,
+         status:existing.status, due:existing.due || "", notes:existing.notes || "", week:existing.week}
+      : {store:(preset && preset.store) || STORES[0].id, cat:(preset && preset.cat) || CATS[0].id,
+         label:"", prio:"amber", status:"not_started", due:"", notes:"", week:week};
+    $("sheet-title").textContent = existing ? "Edit request" : "Add request";
+    $("sheet-week").textContent = "Week " + weekNum(draft.week) + " · " + weekRange(draft.week);
+    $("f-label").value = draft.label;
+    $("f-due").value = draft.due;
+    $("f-notes").value = draft.notes;
+    $("f-err").hidden = true;
+    $("f-delete").hidden = !existing;
+    $("f-delete").removeAttribute("data-armed");
+    $("f-delete").textContent = "Delete";
+    $("f-move").hidden = !existing;
+    syncDraft();
+    overlay.hidden = false;
+    $("f-label").focus();
+  }
+  function closeEditor(){
+    overlay.hidden = true;
+    draft = null; editingId = null;
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  function fail(msg){ $("f-err").textContent = msg; $("f-err").hidden = false; }
+  function collect(){
+    return {
+      store: draft.store, cat: draft.cat,
+      label: $("f-label").value.trim(),
+      prio: draft.prio, status: draft.status,
+      due: $("f-due").value || "",
+      notes: $("f-notes").value.trim(),
+      week: draft.week, example: false
+    };
+  }
+  function netText(e){
+    if (!e) return "Something went wrong. Try again.";
+    if (e.message && /Failed to fetch|NetworkError|network/i.test(e.message))
+      return "No connection to the board. Check your internet and try again.";
+    return e.message || "Something went wrong. Try again.";
+  }
+
+  /* ---------- writes ---------- */
+  function save(){
+    if (!sb) { fail("Not connected to the board yet."); return; }
+    var body = collect();
+    if (!body.label) { fail("Add the brand name so the team knows what to shoot."); return; }
+    var btn = $("f-save");
+    btn.disabled = true;
+    var q = editingId
+      ? sb.from(TABLE).update(body).eq("id", editingId)
+      : sb.from(TABLE).insert([body]);
+    q.then(function(res){
+      btn.disabled = false;
+      if (res.error) { fail(netText(res.error)); return; }
+      closeEditor();
+      refresh();
+    }).catch(function(e){ btn.disabled = false; fail(netText(e)); });
+  }
+  function remove(){
+    if (!sb || !editingId) return;
+    var btn = $("f-delete");
+    if (btn.getAttribute("data-armed") !== "1"){
+      btn.setAttribute("data-armed", "1");
+      btn.textContent = "Delete for everyone?";
+      return;
+    }
+    btn.disabled = true;
+    sb.from(TABLE).delete().eq("id", editingId).then(function(res){
+      btn.disabled = false;
+      if (res.error) { fail(netText(res.error)); return; }
+      closeEditor();
+      refresh();
+    }).catch(function(e){ btn.disabled = false; fail(netText(e)); });
+  }
+  function moveNext(){
+    if (!sb || !editingId) return;
+    var target = shiftWeek(draft.week, 1);
+    var body = collect();
+    body.week = target;
+    var btn = $("f-move");
+    btn.disabled = true;
+    sb.from(TABLE).update(body).eq("id", editingId).then(function(res){
+      btn.disabled = false;
+      if (res.error) { fail(netText(res.error)); return; }
+      week = target;
+      closeEditor();
+      refresh();
+    }).catch(function(e){ btn.disabled = false; fail(netText(e)); });
+  }
+  function carryOver(){
+    if (!sb) return;
+    var target = shiftWeek(week, 1), i;
+    var src = [], list = weekItems();
+    for (i = 0; i < list.length; i++) if (list[i].status !== "complete") src.push(list[i]);
+    var existing = {};
+    for (i = 0; i < items.length; i++){
+      if (items[i].week === target)
+        existing[items[i].store + "|" + items[i].cat + "|" + (items[i].label || "").toLowerCase()] = true;
+    }
+    var todo = [];
+    for (i = 0; i < src.length; i++){
+      var key = src[i].store + "|" + src[i].cat + "|" + (src[i].label || "").toLowerCase();
+      if (!existing[key]) todo.push(src[i]);
+    }
+    var btn = $("carry");
+    if (!todo.length){
+      btn.textContent = src.length ? "Already in week " + weekNum(target) : "Nothing unfinished to carry";
+      carryArmed = false;
+      setTimeout(function(){ btn.textContent = "Carry unfinished into next week"; }, 2600);
+      return;
+    }
+    if (!carryArmed){
+      carryArmed = true;
+      btn.textContent = "Move " + todo.length + " into week " + weekNum(target) + "? Confirm";
+      return;
+    }
+    carryArmed = false;
+    btn.disabled = true;
+    btn.textContent = "Moving…";
+    var rows = [];
+    for (i = 0; i < todo.length; i++){
+      rows.push({
+        store:todo[i].store, cat:todo[i].cat, label:todo[i].label, prio:todo[i].prio,
+        status:todo[i].status, due:"", notes:todo[i].notes || "", week:target, example:false
+      });
+    }
+    sb.from(TABLE).insert(rows).then(function(res){
+      btn.disabled = false;
+      btn.textContent = "Carry unfinished into next week";
+      if (!res.error) { week = target; refresh(); }
+    }).catch(function(){
+      btn.disabled = false;
+      btn.textContent = "Carry unfinished into next week";
+    });
+  }
+  function clearExamples(){
+    if (!sb) return;
+    var btn = $("ex-clear");
+    if (btn.getAttribute("data-armed") !== "1"){
+      btn.setAttribute("data-armed", "1");
+      btn.textContent = "Clear for everyone?";
+      return;
+    }
+    btn.disabled = true;
+    sb.from(TABLE).delete().eq("example", true).then(function(){
+      btn.disabled = false;
+      btn.removeAttribute("data-armed");
+      btn.textContent = "Clear examples";
+      refresh();
+    }).catch(function(){ btn.disabled = false; });
+  }
+
+  /* ---------- load / live ---------- */
+  function normalise(r){
+    return {
+      id: r.id,
+      store: byId(STORES, r.store) ? r.store : STORES[0].id,
+      cat: byId(CATS, r.cat) ? r.cat : CATS[0].id,
+      label: typeof r.label === "string" ? r.label : "",
+      prio: byId(PRIOS, r.prio) ? r.prio : "amber",
+      status: byId(STATUSES, r.status) ? r.status : "not_started",
+      week: typeof r.week === "string" && /^\d{4}-W\d{2}$/.test(r.week) ? r.week : thisWeek,
+      due: typeof r.due === "string" ? r.due : "",
+      notes: typeof r.notes === "string" ? r.notes : "",
+      example: r.example === true,
+      created_at: r.created_at || ""
+    };
+  }
+  function setLive(state, text){
+    var el = $("live");
+    el.classList.toggle("on", state === "on");
+    el.classList.toggle("off", state === "off");
+    $("live-text").textContent = text;
+  }
+  function showErr(msg){
+    $("err-notice-text").innerHTML = msg;
+    $("err-notice").hidden = false;
+  }
+  function refresh(){
+    if (!sb) return Promise.resolve();
+    return sb.from(TABLE).select("*").then(function(res){
+      if (res.error){
+        setLive("off", "Offline");
+        showErr("<strong>Can't reach the board.</strong> " + esc(netText(res.error)));
+        return;
+      }
+      $("err-notice").hidden = true;
+      ready = true;
+      var next = [];
+      for (var i = 0; i < res.data.length; i++) next.push(normalise(res.data[i]));
+      items = next;
+      render();
+    }).catch(function(e){
+      setLive("off", "Offline");
+      showErr("<strong>Can't reach the board.</strong> " + esc(netText(e)));
+    });
+  }
+
+  /* ---------- events ---------- */
+  function resetCarry(){ carryArmed = false; $("carry").textContent = "Carry unfinished into next week"; }
+  $("wk-prev").addEventListener("click", function(){ week = shiftWeek(week, -1); resetCarry(); render(); });
+  $("wk-next").addEventListener("click", function(){ week = shiftWeek(week, 1); resetCarry(); render(); });
+  $("wk-today").addEventListener("click", function(){ week = thisWeek; resetCarry(); render(); });
+  $("add-top").addEventListener("click", function(){ openEditor(null, null); });
+  $("carry").addEventListener("click", carryOver);
+  $("ex-clear").addEventListener("click", clearExamples);
+  $("err-retry").addEventListener("click", function(){ $("err-notice").hidden = true; refresh(); });
+
+  var tiles = ["urgent","not_started","in_progress","editing","complete"];
+  for (var t = 0; t < tiles.length; t++){
+    (function(key){
+      $("t-" + key).addEventListener("click", function(){
+        filter = (filter === key) ? null : key;
+        render();
+      });
+    })(tiles[t]);
+  }
+  board.addEventListener("click", function(ev){
+    var add = ev.target.closest(".addrow");
+    if (add){ openEditor(null, {store:add.getAttribute("data-store"), cat:add.getAttribute("data-cat")}); return; }
+    var card = ev.target.closest(".item");
+    if (card){
+      var id = card.getAttribute("data-id");
+      for (var i = 0; i < items.length; i++) if (items[i].id === id) { openEditor(items[i], null); return; }
+    }
+  });
+
+  segFill($("f-store"), STORES, "store", false);
+  segFill($("f-cat"), CATS, "cat", false);
+  segFill($("f-prio"), PRIOS, "prio", true);
+  segFill($("f-status"), STATUSES, "status", false);
+  ["f-store","f-cat","f-prio","f-status"].forEach(function(hostId){
+    $(hostId).addEventListener("click", function(ev){
+      var b = ev.target.closest(".seg-b");
+      if (!b || !draft) return;
+      draft[b.getAttribute("data-k")] = b.getAttribute("data-v");
+      syncDraft();
+    });
+  });
+  $("f-save").addEventListener("click", save);
+  $("f-cancel").addEventListener("click", closeEditor);
+  $("sheet-x").addEventListener("click", closeEditor);
+  $("f-delete").addEventListener("click", remove);
+  $("f-move").addEventListener("click", moveNext);
+  overlay.addEventListener("click", function(ev){ if (ev.target === overlay) closeEditor(); });
+  document.addEventListener("keydown", function(ev){
+    if (ev.key === "Escape" && !overlay.hidden) closeEditor();
+    if (ev.key === "Enter" && !overlay.hidden && ev.target && ev.target.id === "f-label") save();
+  });
+
+  /* ---------- boot ---------- */
+  render();
+
+  if (SUPABASE_URL.indexOf("__SUPABASE") === 0 || SUPABASE_ANON_KEY.indexOf("__SUPABASE") === 0){
+    setLive("off", "Not set up");
+    showErr("<strong>Not connected.</strong> The project URL and key at the top of this file still need filling in.");
+  } else if (!window.supabase || !window.supabase.createClient){
+    setLive("off", "Offline");
+    showErr("<strong>Couldn't load the board library.</strong> Reload the page; if it keeps failing you may be on a network that blocks the CDN.");
+  } else {
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {persistSession:false},
+      realtime: {params:{eventsPerSecond:3}}
+    });
+    setLive("", "Connecting");
+    refresh().then(function(){
+      sb.channel("shoot-board")
+        .on("postgres_changes", {event:"*", schema:"public", table:TABLE}, function(){ refresh(); })
+        .subscribe(function(status){
+          if (status === "SUBSCRIBED") setLive("on", "Live");
+          else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") setLive("off", "Refreshing every 20s");
+        });
+    });
+    setInterval(function(){ if (document.visibilityState !== "hidden") refresh(); }, 20000);
+    document.addEventListener("visibilitychange", function(){
+      if (document.visibilityState === "visible") refresh();
+    });
+  }
+})();
+</script>
+</body>
+</html>
